@@ -7,12 +7,14 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,12 +37,21 @@ public class MainActivity extends AppCompatActivity {
         rvPizzas = findViewById(R.id.rvPizzas);
         rvDrinks = findViewById(R.id.rvDrinks);
         rvMixRice = findViewById(R.id.rvMixRice);
+        ImageView ivProfile = findViewById(R.id.ivProfile);
 
         // Get the username passed from LoginActivity
         String userName = getIntent().getStringExtra("USER_NAME");
+        String userEmail = getIntent().getStringExtra("USER_EMAIL");
         if(userName != null) {
             tvWelcomeUser.setText("Hello, " + userName + "!");
         }
+
+
+        ivProfile.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+            intent.putExtra("USER_EMAIL", userEmail);
+            startActivity(intent);
+        });
 
         // Set LayoutManagers to HORIZONTAL for all RecyclerViews
         rvBurgers.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
@@ -65,19 +76,7 @@ public class MainActivity extends AppCompatActivity {
         burgerAdapter = new MealAdapter(burgerList, (meal, quantity) -> {
             CartManager.getInstance().addToCart(meal, quantity);
         });
-        rvBurgers.setAdapter(burgerAdapter);
-
-        // --- PIZZAS ---
-        pizzaList = new ArrayList<>();
-        pizzaList.add(new Meal("Cheese Pizza", "1500", R.drawable.cheese_pizza));
-        pizzaList.add(new Meal("Sausage Pizza", "1800", R.drawable.sausage_pizza));
-        pizzaList.add(new Meal("BBQ Chicken", "2200", R.drawable.bbq_chicken_pizza));
-        pizzaList.add(new Meal("Pizza 1", "1600", R.drawable.pizza1));
-        pizzaList.add(new Meal("Pizza 2", "1700", R.drawable.pizza2));
-        pizzaList.add(new Meal("Pizza 3", "1900", R.drawable.pizza3));
-        pizzaList.add(new Meal("Pizza 4", "2000", R.drawable.pizza4));
-        pizzaList.add(new Meal("Pizza 5", "2100", R.drawable.pizza5));
-        // Set adapter for pizzas with quantity change listener
+        rvBurgers.setAdapter(burgerAdapter);        // Set adapter for pizzas with quantity change listener
         pizzaAdapter = new MealAdapter(pizzaList, (meal, quantity) -> {
             CartManager.getInstance().addToCart(meal, quantity);
         });
