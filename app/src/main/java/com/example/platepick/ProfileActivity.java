@@ -1,5 +1,6 @@
 package com.example.platepick;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
@@ -71,6 +72,12 @@ public class ProfileActivity extends AppCompatActivity {
         boolean updated = dbHelper.updateUserProfile(currentEmail, updatedUsername, updatedEmail, updatedPassword);
         if (updated) {
             currentEmail = updatedEmail;
+
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra("UPDATED_USER_NAME", updatedUsername);
+            resultIntent.putExtra("UPDATED_USER_EMAIL", updatedEmail);
+            setResult(RESULT_OK, resultIntent);
+
             Toast.makeText(this, "Profile updated successfully.", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, "Failed to update profile.", Toast.LENGTH_SHORT).show();
