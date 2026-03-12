@@ -87,6 +87,32 @@ public class MainActivity extends AppCompatActivity {
         tvCart.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, CartActivity.class)));
     }
 
+    private void updateWelcomeText() {
+        if (userName != null && !userName.trim().isEmpty()) {
+            tvWelcomeUser.setText("Hello, " + userName + "!");
+        } else {
+            tvWelcomeUser.setText("Hello, User!");
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PROFILE_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            String updatedName = data.getStringExtra("UPDATED_USER_NAME");
+            String updatedEmail = data.getStringExtra("UPDATED_USER_EMAIL");
+
+            if (updatedName != null && !updatedName.trim().isEmpty()) {
+                userName = updatedName;
+            }
+            if (updatedEmail != null && !updatedEmail.trim().isEmpty()) {
+                userEmail = updatedEmail;
+            }
+
+            updateWelcomeText();
+        }
+    }
 
 
     private void filterMeals(String query) {
