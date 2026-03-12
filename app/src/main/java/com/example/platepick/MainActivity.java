@@ -16,11 +16,13 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int PROFILE_REQUEST_CODE = 1001;
     private TextView tvWelcomeUser;
     private EditText etSearch;
     private RecyclerView rvBurgers, rvPizzas, rvDrinks, rvMixRice;
     private MealAdapter burgerAdapter, pizzaAdapter, drinkAdapter, mixRiceAdapter;
     private List<Meal> burgerList, pizzaList, drinkList, mixRiceList;
+    private String userName, userEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,16 +37,14 @@ public class MainActivity extends AppCompatActivity {
         rvMixRice = findViewById(R.id.rvMixRice);
         ImageView ivProfile = findViewById(R.id.ivProfile);
 
-        String userName = getIntent().getStringExtra("USER_NAME");
-        String userEmail = getIntent().getStringExtra("USER_EMAIL");
-        if(userName != null) {
-            tvWelcomeUser.setText("Hello, " + userName + "!");
-        }
+        userName = getIntent().getStringExtra("USER_NAME");
+        userEmail = getIntent().getStringExtra("USER_EMAIL");
+        updateWelcomeText();
 
         ivProfile.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
             intent.putExtra("USER_EMAIL", userEmail);
-            startActivity(intent);
+            startActivityForResult(intent, PROFILE_REQUEST_CODE);
         });
 
         rvBurgers.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
@@ -86,6 +86,8 @@ public class MainActivity extends AppCompatActivity {
         TextView tvCart = findViewById(R.id.tvCart);
         tvCart.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, CartActivity.class)));
     }
+
+
 
     private void filterMeals(String query) {
         if (query.isEmpty()) {
