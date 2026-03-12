@@ -2,6 +2,7 @@ package com.example.platepick;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns; // Added for email validation
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,19 +34,37 @@ public class RegisterActivity extends AppCompatActivity {
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Get the input from user
-                String name = etRegName.getText().toString();
-                String email = etRegEmail.getText().toString();
-                String pass = etRegPassword.getText().toString();
-                String confirmPass = etRegConfirmPassword.getText().toString();
+                // Get the input from user and remove extra spaces using .trim()
+                String name = etRegName.getText().toString().trim();
+                String email = etRegEmail.getText().toString().trim();
+                String pass = etRegPassword.getText().toString().trim();
+                String confirmPass = etRegConfirmPassword.getText().toString().trim();
 
-                // Validation: Check if any field is empty
+                // Regex pattern for strong password (min 8 chars, 1 uppercase, 1 lowercase, 1 number)
+                String passwordPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$";
+
+                // Validation 1: Check if any field is empty
                 if (name.isEmpty() || email.isEmpty() || pass.isEmpty() || confirmPass.isEmpty()) {
                     Toast.makeText(RegisterActivity.this, "Please fill all fields", Toast.LENGTH_SHORT).show();
-                } else if (!isPasswordMatch(pass, confirmPass)) {
-                    // Check if passwords match
+                }
+                // Validation 2: Check email format
+                else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                    etRegEmail.setError("Please enter a valid email address");
+                    etRegEmail.requestFocus(); // Focus cursor on error field
+                }
+                // Validation 3: Check for strong password using regex
+                else if (!pass.matches(passwordPattern)) {
+                    etRegPassword.setError("Password must be at least 8 characters long, with 1 uppercase, 1 lowercase, and 1 number");
+                    etRegPassword.requestFocus();
+                }
+                // Validation 4: Check if passwords match
+                else if (!isPasswordMatch(pass, confirmPass)) {
+                    etRegConfirmPassword.setError("Passwords do not match!");
+                    etRegConfirmPassword.requestFocus();
                     Toast.makeText(RegisterActivity.this, "Passwords do not match! Please try again.", Toast.LENGTH_SHORT).show();
-                } else {
+                }
+                // If all validations pass, save to database
+                else {
                     // Try to insert data into SQLite database
                     boolean isInserted = dbHelper.insertData(name, email, pass);
 
