@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tvOrderHistoryItem"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/cart_button_bg"
+    android:lineSpacingExtra="2dp"
+    android:padding="12dp"
+    android:textColor="#333333"
+    android:textSize="14sp" />
