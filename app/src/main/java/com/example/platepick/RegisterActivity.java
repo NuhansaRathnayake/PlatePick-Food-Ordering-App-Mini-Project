@@ -70,8 +70,15 @@ public class RegisterActivity extends AppCompatActivity {
 
                     if (isInserted) {
                         Toast.makeText(RegisterActivity.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
-                        // Close this screen and go back to LoginActivity
-                        finish();
+
+                        // ---------------------------------------------------------
+                        // NEW: Explicitly navigate to LoginActivity and clear back stack
+                        // ---------------------------------------------------------
+                        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish(); // Close this screen
+
                     } else {
                         Toast.makeText(RegisterActivity.this, "Registration Failed! Try again.", Toast.LENGTH_SHORT).show();
                     }
